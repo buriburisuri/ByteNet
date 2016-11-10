@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 import sugartensor as tf
-from data import ComTransTrain
+import numpy as np
+from data import ComTransTest
 
 
 __author__ = 'buriburisuri@gmail.com'
@@ -9,32 +10,30 @@ __author__ = 'buriburisuri@gmail.com'
 # set log level to debug
 tf.sg_verbosity(10)
 
-
 #
 # hyper parameters
 #
 
 batch_size = 8     # batch size
-latent_dim = 300   # hidden layer dimension
-num_blocks = 3     # dilated blocks
+latent_dim = 200   # hidden layer dimension
+num_blocks = 2     # dilated blocks
+num_batch = 2      # total generation time
 
 #
 # inputs
 #
 
 # ComTrans parallel corpus input tensor ( with QueueRunner )
-data = ComTransTrain(batch_size=batch_size)
-
-# source, target sentence
-x, y = data.source, data.target
+data = ComTransTest(batch_size=batch_size)
 voca_size = data.voca_size
+
+# place holders
+x = tf.placeholder(dtype=tf.sg_intx, shape=(batch_size, data.max_len))
+y_src = tf.placeholder(dtype=tf.sg_intx, shape=(batch_size, data.max_len))
 
 # make embedding matrix for source and target
 emb_x = tf.sg_emb(name='emb_x', voca_size=voca_size, dim=latent_dim)
 emb_y = tf.sg_emb(name='emb_y', voca_size=voca_size, dim=latent_dim)
-
-# shift target for training source
-y_src = tf.concat(1, [tf.zeros((batch_size, 1), tf.sg_intx), y[:, :-1]])
 
 
 # residual block
@@ -99,10 +98,41 @@ for i in range(num_blocks):
 # final fully convolution layer for softmax
 dec = dec.sg_conv1d(size=1, dim=data.voca_size)
 
-# cross entropy loss with logit and mask
-loss = dec.sg_ce(target=y, mask=True)
+# greedy search
+label = dec.sg_argmax()
 
-# train
-tf.sg_train(log_interval=10, lr=0.0001, loss=loss,
-            ep_size=data.num_batch, max_ep=20, early_stop=False)
+# run graph for translating
+with tf.Session() as sess:
+    # init session vars
+    tf.sg_init(sess)
 
+    # restore parameters
+    saver = tf.train.Saver()
+    saver.restore(sess, tf.train.latest_checkpoint('asset/train/ckpt'))
+
+    for n in range(num_batch):
+
+        # get test data
+        src, gt = data.get_next()
+
+        # initialize character sequence
+        pred_prev = np.zeros((batch_size, data.max_len)).astype(np.int32)
+        pred = np.zeros((batch_size, data.max_len)).astype(np.int32)
+
+        # generate output sequence
+        for i in range(data.max_len):
+            # predict character
+            out = sess.run(label, {x: src, y_src: pred_prev})
+            # update character sequence
+            if i < data.max_len - 1:
+                pred_prev[:, i + 1] = out[:, i]
+            pred[:, i] = out[:, i]
+
+        # print result
+        print 'iteration #%d --------------' % n
+        print 'input : --------------'
+        data.print_index(src)
+        print 'ground-truth : --------------'
+        data.print_index(gt)
+        print 'output : --------------'
+        data.print_index(pred)
