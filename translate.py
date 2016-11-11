@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 import sugartensor as tf
 import numpy as np
-from data import ComTransTest
+from data import ComTrans
 
 
 __author__ = 'buriburisuri@gmail.com'
@@ -17,20 +17,21 @@ tf.sg_verbosity(10)
 batch_size = 10
 latent_dim = 300   # hidden layer dimension
 num_blocks = 3     # dilated blocks
-max_len = 150      # max sequence length
-voca_size = 123    # total characters in the vocabulary
 
 #
 # inputs
 #
 
+# ComTrans parallel corpus input tensor ( with QueueRunner )
+data = ComTrans(batch_size=batch_size)
+
 # place holders
-x = tf.placeholder(dtype=tf.sg_intx, shape=(batch_size, max_len))
-y_src = tf.placeholder(dtype=tf.sg_intx, shape=(batch_size, max_len))
+x = tf.placeholder(dtype=tf.sg_intx, shape=(batch_size, data.max_len))
+y_src = tf.placeholder(dtype=tf.sg_intx, shape=(batch_size, data.max_len))
 
 # make embedding matrix for source and target
-emb_x = tf.sg_emb(name='emb_x', voca_size=voca_size, dim=latent_dim)
-emb_y = tf.sg_emb(name='emb_y', voca_size=voca_size, dim=latent_dim)
+emb_x = tf.sg_emb(name='emb_x', voca_size=data.voca_size, dim=latent_dim)
+emb_y = tf.sg_emb(name='emb_y', voca_size=data.voca_size, dim=latent_dim)
 
 
 # residual block
@@ -93,7 +94,7 @@ for i in range(num_blocks):
            .sg_res_block(size=3, rate=16, causal=True))
 
 # final fully convolution layer for softmax
-dec = dec.sg_conv1d(size=1, dim=voca_size)
+dec = dec.sg_conv1d(size=1, dim=data.voca_size)
 
 # greedy search
 label = dec.sg_argmax()
@@ -105,45 +106,45 @@ label = dec.sg_argmax()
 
 # smaple french sentences for source language
 sources = [
-    "Et pareil phénomène ne devrait pas occuper nos débats ?",
-    "Mais nous devons les aider sur la question de la formation .",
-    "Les videurs de sociétés sont punis .",
-    "Après cette période , ces échantillons ont été analysés et les résultats illustrent bien la quantité de dioxine émise au cours des mois écoulés .",
-    "Merci beaucoup , Madame la Commissaire .",
-    "Le Zimbabwe a beaucoup à gagner de l ' accord de partenariat et a un urgent besoin d ' aide et d ' allégement de la dette .",
-    "Le gouvernement travailliste de Grande-Bretagne a également des raisons d ' être fier de ses performances .",
-    "La plupart d' entre nous n' a pas l' intention de se vanter des 3 millions d' euros .",
-    "Si le Conseil avait travaillé aussi vite que ne l' a fait M. Brok , nous serions effectivement bien plus avancés .",
-    "Le deuxième thème important concerne la question de la gestion des contingents tarifaires ."
+    u"Et pareil phénomène ne devrait pas occuper nos débats ?",
+    u"Mais nous devons les aider sur la question de la formation .",
+    u"Les videurs de sociétés sont punis .",
+    u"Après cette période , ces échantillons ont été analysés et les résultats illustrent bien la quantité de dioxine émise au cours des mois écoulés .",
+    u"Merci beaucoup , Madame la Commissaire .",
+    u"Le Zimbabwe a beaucoup à gagner de l ' accord de partenariat et a un urgent besoin d ' aide et d ' allégement de la dette .",
+    u"Le gouvernement travailliste de Grande-Bretagne a également des raisons d ' être fier de ses performances .",
+    u"La plupart d' entre nous n' a pas l' intention de se vanter des 3 millions d' euros .",
+    u"Si le Conseil avait travaillé aussi vite que ne l' a fait M. Brok , nous serions effectivement bien plus avancés .",
+    u"Le deuxième thème important concerne la question de la gestion des contingents tarifaires ."
 ]
+
+# to batch form
+sources = data.to_batch(sources)
 
 # run graph for translating
 with tf.Session() as sess:
     # init session vars
     tf.sg_init(sess)
 
-    # restore parameters
-    saver = tf.train.Saver()
-    saver.restore(sess, tf.train.latest_checkpoint('asset/train/ckpt'))
+    # # restore parameters
+    # saver = tf.train.Saver()
+    # saver.restore(sess, tf.train.latest_checkpoint('asset/train/ckpt'))
 
     # initialize character sequence
-    pred_prev = np.zeros((batch_size, max_len)).astype(np.int32)
-    pred = np.zeros((batch_size, max_len)).astype(np.int32)
+    pred_prev = np.zeros((batch_size, data.max_len)).astype(np.int32)
+    pred = np.zeros((batch_size, data.max_len)).astype(np.int32)
 
     # generate output sequence
-    for i in range(max_len):
+    for i in range(data.max_len):
         # predict character
         out = sess.run(label, {x: sources, y_src: pred_prev})
         # update character sequence
-        if i < max_len - 1:
+        if i < data.max_len - 1:
             pred_prev[:, i + 1] = out[:, i]
         pred[:, i] = out[:, i]
 
-    # print result
-    print 'iteration #%d --------------' % n
-    print 'input : --------------'
-    data.print_index(sources)
-    print 'ground-truth : --------------'
-    data.print_index(gt)
-    print 'output : --------------'
-    data.print_index(pred)
+# print result
+print '\nsources : --------------'
+data.print_index(sources)
+print '\ntargets : --------------'
+data.print_index(pred)

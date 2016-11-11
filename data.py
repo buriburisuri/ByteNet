@@ -63,48 +63,34 @@ class ComTrans(object):
                 sources.remove(s)
                 targets.remove(t)
 
-        # convert to index list and add <EOS> to end of sentence
-        for i in range(len(sources)):
-            sources[i] = [self.byte2index[ch] for ch in sources[i]] + [1]
-            targets[i] = [self.byte2index[ch] for ch in targets[i]] + [1]
-
-        # zero-padding
-        for i in range(len(sources)):
-            sources[i] += [0] * (self.max_len - len(sources[i]))
-            targets[i] += [0] * (self.max_len - len(targets[i]))
+        # convert to batch-form
+        sources = self.to_batch(sources, is_byte=True)
+        targets = self.to_batch(targets, is_byte=True)
 
         # swap source and target : french -> english
         return targets, sources
 
+    def to_batch(self, sentences, is_byte=False):
+
+        # convert to index list and add <EOS> to end of sentence
+        for i in range(len(sentences)):
+            if is_byte:
+                sentences[i] = [self.byte2index[ch] for ch in sentences[i]] + [1]
+            else:
+                sentences[i] = [self.byte2index[ord(ch)] for ch in sentences[i]] + [1]
+
+        # zero-padding
+        for i in range(len(sentences)):
+            sentences[i] += [0] * (self.max_len - len(sentences[i]))
+
+        return sentences
+
     def print_index(self, indices):
         for i, index in enumerate(indices):
-            print '[%d]' % i + ''.join([unichr(self.index2byte[ch]) for ch in index if ch > 0])
-
-
-# class ComTransTest(ComTransTrain):
-#
-#     def __init__(self, batch_size=32, name='test'):
-#
-#         self.batch_size = batch_size
-#         self.index = 0
-#
-#         # load train corpus
-#         self.sources, self.targets = self._load_corpus(mode='test')
-#
-#         # calc total batch count
-#         self.num_batch = len(self.sources) // batch_size
-#
-#         # print info
-#         tf.sg_info('Test data loaded.(total data=%d, total batch=%d)' % (len(self.sources), self.num_batch))
-#
-#     def get_next(self):
-#
-#         s = self.sources[self.index:self.index+self.batch_size]
-#         t = self.targets[self.index:self.index+self.batch_size]
-#
-#         if self.index + self.batch_size <= len(self.sources):
-#             self.index += self.batch_size
-#         else:
-#             self.index = 0
-#
-#         return np.asarray(s).astype(np.int32), np.asarray(t).astype(np.int32)
+            str_ = ''
+            for ch in index:
+                if ch > 1:
+                    str_ += unichr(self.index2byte[ch])
+                elif ch == 1:  # <EOS>
+                    break
+            print '[%d]' % i + str_
