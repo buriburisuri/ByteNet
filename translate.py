@@ -15,7 +15,7 @@ tf.sg_verbosity(10)
 #
 
 batch_size = 10
-latent_dim = 500   # hidden layer dimension
+latent_dim = 300   # hidden layer dimension
 num_blocks = 3     # dilated blocks
 
 #

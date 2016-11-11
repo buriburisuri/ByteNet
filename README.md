@@ -1,8 +1,8 @@
-# ByteNet - Machine Translation
+# ByteNet - Fast Neural Machine Translation
 A tensorflow implementation of French-to-English machine translation using DeepMind's ByteNet 
 from the paper [Nal et al's Neural Machine Translation in Linear Time](https://arxiv.org/abs/1610.10099).
 This paper proposed the fancy method which replaced the traditional RNNs with conv1d dilated and causal conv1d, 
-and they attained state-of-the-art performance on character-level language modeling. 
+and they achieved fast training and state-of-the-art performance on character-level translation. 
 
 The architecture ( from the paper )
 <p align="center">
@@ -36,8 +36,9 @@ Download which package (l=list; x=cancel)?
 ## Implementation differences from the paper.
 
 1. I've replaced the Sub Batch Normal with [Layer Normalization](https://arxiv.org/abs/1607.06450) for convenience.
-2. No bags of characters applied for simplicity.
-3. Latent dimension is 500 because comtrans corpus in NLTK is small. ( 892 in the paper )
+1. No bags of characters applied for simplicity.
+1. Latent dimension is 300 because comtrans corpus in NLTK is small. ( 892 in the paper )
+1. Generation code not optimized.
 
 ## Training the network
 
@@ -47,6 +48,9 @@ python train.py
 </code></pre>
 to train the network. You can see the result ckpt files and log files in the 'asset/train' directory.
 Launch tensorboard --logdir asset/train/log to monitor training process.
+
+I've trained this model on a single Titan X GPU during 7 hours until 20 epochs. 
+If you don't have a Titan X GPU, reduce batch_size in the train.py file from 16 to 4 or 8.  
 
 ## Translate sample French sentences
  

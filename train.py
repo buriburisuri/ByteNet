@@ -15,7 +15,7 @@ tf.sg_verbosity(10)
 #
 
 batch_size = 16    # batch size
-latent_dim = 500   # hidden layer dimension
+latent_dim = 300   # hidden layer dimension
 num_blocks = 3     # dilated blocks
 
 #
@@ -28,6 +28,14 @@ data = ComTrans(batch_size=batch_size)
 # source, target sentence
 x, y = data.source, data.target
 voca_size = data.voca_size
+
+with tf.Session() as sess:
+    tf.sg_init(sess)
+    with tf.sg_queue_context(sess):
+        a, b = sess.run([x, y])
+
+data.print_index(a)
+data.print_index(b)
 
 # make embedding matrix for source and target
 emb_x = tf.sg_emb(name='emb_x', voca_size=voca_size, dim=latent_dim)

@@ -58,26 +58,30 @@ class ComTrans(object):
         self.max_len = 150
 
         # remove short and long sentence
+        src, tgt = [], []
         for s, t in zip(sources, targets):
-            if len(s) < 30 or len(t) < 30 or len(s) > self.max_len - 1 or len(t) > self.max_len - 1:
-                sources.remove(s)
-                targets.remove(t)
+            if 50 <= len(s) < self.max_len and 50 <= len(t) < self.max_len:
+                src.append(s)
+                tgt.append(t)
 
-        # convert to batch-form
-        sources = self.to_batch(sources, is_byte=True)
-        targets = self.to_batch(targets, is_byte=True)
+        # convert to index list and add <EOS> to end of sentence
+        for i in range(len(src)):
+            src[i] = [self.byte2index[ch] for ch in src[i]] + [1]
+            tgt[i] = [self.byte2index[ch] for ch in tgt[i]] + [1]
+
+        # zero-padding
+        for i in range(len(tgt)):
+            src[i] += [0] * (self.max_len - len(src[i]))
+            tgt[i] += [0] * (self.max_len - len(tgt[i]))
 
         # swap source and target : french -> english
-        return targets, sources
+        return tgt, src
 
-    def to_batch(self, sentences, is_byte=False):
+    def to_batch(self, sentences):
 
         # convert to index list and add <EOS> to end of sentence
         for i in range(len(sentences)):
-            if is_byte:
-                sentences[i] = [self.byte2index[ch] for ch in sentences[i]] + [1]
-            else:
-                sentences[i] = [self.byte2index[ord(ch)] for ch in sentences[i]] + [1]
+            sentences[i] = [self.byte2index[ord(ch)] for ch in sentences[i]] + [1]
 
         # zero-padding
         for i in range(len(sentences)):
