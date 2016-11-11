@@ -14,8 +14,8 @@ tf.sg_verbosity(10)
 # hyper parameters
 #
 
-batch_size = 8     # batch size
-latent_dim = 300   # hidden layer dimension
+batch_size = 16    # batch size
+latent_dim = 500   # hidden layer dimension
 num_blocks = 3     # dilated blocks
 
 #

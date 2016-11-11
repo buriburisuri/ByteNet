@@ -36,8 +36,8 @@ Download which package (l=list; x=cancel)?
 ## Implementation differences from the paper.
 
 1. I've replaced the Sub Batch Normal with [Layer Normalization](https://arxiv.org/abs/1607.06450) for convenience.
-2. No bags of characters applied.
-3. Latent dimension is 300. ( 892 in the paper )
+2. No bags of characters applied for simplicity.
+3. Latent dimension is 500 because comtrans corpus in NLTK is small. ( 892 in the paper )
 
 ## Training the network
 
@@ -56,10 +56,10 @@ python translate.py
 </code></pre>
 to translate sample French sentences to English. The result will be printed on the console. 
 
-## Generated image sample
+## Sample translations
 
-| French (sources)       | English (by ByteNet)           | English (by Google translator)  |
-| :-------------: |:-------------:| -----:|
+| :------------- | :------------- | :------------- |
+| French (sources) | English translated by ByteNet | English translated by Google translator |
 | Et pareil phénomène ne devrait pas occuper nos débats ? | to-do | And such a phenomenon should not occupy our debates? |
 | Mais nous devons les aider sur la question de la formation . | to-do | But we need help on the issue of training. |
 | Les videurs de sociétés sont punis . | to-do | Corporate bouncers are punished. |

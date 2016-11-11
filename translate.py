@@ -15,7 +15,7 @@ tf.sg_verbosity(10)
 #
 
 batch_size = 10
-latent_dim = 300   # hidden layer dimension
+latent_dim = 500   # hidden layer dimension
 num_blocks = 3     # dilated blocks
 
 #
@@ -96,7 +96,7 @@ for i in range(num_blocks):
 # final fully convolution layer for softmax
 dec = dec.sg_conv1d(size=1, dim=data.voca_size)
 
-# greedy search
+# greedy search policy
 label = dec.sg_argmax()
 
 
@@ -126,22 +126,24 @@ with tf.Session() as sess:
     # init session vars
     tf.sg_init(sess)
 
-    # # restore parameters
-    # saver = tf.train.Saver()
-    # saver.restore(sess, tf.train.latest_checkpoint('asset/train/ckpt'))
+    # restore parameters
+    saver = tf.train.Saver()
+    saver.restore(sess, tf.train.latest_checkpoint('asset/train/ckpt'))
 
-    # initialize character sequence
-    pred_prev = np.zeros((batch_size, data.max_len)).astype(np.int32)
-    pred = np.zeros((batch_size, data.max_len)).astype(np.int32)
+    for i in range(3):
 
-    # generate output sequence
-    for i in range(data.max_len):
-        # predict character
-        out = sess.run(label, {x: sources, y_src: pred_prev})
-        # update character sequence
-        if i < data.max_len - 1:
-            pred_prev[:, i + 1] = out[:, i]
-        pred[:, i] = out[:, i]
+        # initialize character sequence
+        pred_prev = np.zeros((batch_size, data.max_len)).astype(np.int32)
+        pred = np.zeros((batch_size, data.max_len)).astype(np.int32)
+
+        # generate output sequence
+        for i in range(data.max_len):
+            # predict character
+            out = sess.run(label, {x: sources, y_src: pred_prev})
+            # update character sequence
+            if i < data.max_len - 1:
+                pred_prev[:, i + 1] = out[:, i]
+            pred[:, i] = out[:, i]
 
 # print result
 print '\nsources : --------------'
