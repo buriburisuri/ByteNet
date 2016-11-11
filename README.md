@@ -58,8 +58,8 @@ to translate sample French sentences to English. The result will be printed on t
 
 ## Sample translations
 
-| :------------- | :------------- | :------------- |
 | French (sources) | English translated by ByteNet | English translated by Google translator |
+| :------------- | :------------- | :------------- |
 | Et pareil phénomène ne devrait pas occuper nos débats ? | to-do | And such a phenomenon should not occupy our debates? |
 | Mais nous devons les aider sur la question de la formation . | to-do | But we need help on the issue of training. |
 | Les videurs de sociétés sont punis . | to-do | Corporate bouncers are punished. |
