@@ -1,13 +1,12 @@
 # -*- coding: utf-8 -*-
 import sugartensor as tf
-from sklearn.cross_validation import train_test_split
 import numpy as np
 
 
 __author__ = 'buriburisuri@gmail.com'
 
 
-class ComTransTrain(object):
+class ComTrans(object):
 
     def __init__(self, batch_size=32, name='train'):
 
@@ -74,16 +73,6 @@ class ComTransTrain(object):
             sources[i] += [0] * (self.max_len - len(sources[i]))
             targets[i] += [0] * (self.max_len - len(targets[i]))
 
-        # split data
-        if mode == 'train':
-            sources, _, targets, _ \
-                = train_test_split(sources, targets, test_size=0.1, random_state=27521)
-        elif mode == 'test':
-            _, sources, _, targets \
-                = train_test_split(sources, targets, test_size=0.1, random_state=27521)
-            # sources, _, targets, _ \
-            #     = train_test_split(sources, targets, test_size=0.1, random_state=27521)
-
         # swap source and target : french -> english
         return targets, sources
 
@@ -92,30 +81,30 @@ class ComTransTrain(object):
             print '[%d]' % i + ''.join([unichr(self.index2byte[ch]) for ch in index if ch > 0])
 
 
-class ComTransTest(ComTransTrain):
-
-    def __init__(self, batch_size=32, name='test'):
-
-        self.batch_size = batch_size
-        self.index = 0
-
-        # load train corpus
-        self.sources, self.targets = self._load_corpus(mode='test')
-
-        # calc total batch count
-        self.num_batch = len(self.sources) // batch_size
-
-        # print info
-        tf.sg_info('Test data loaded.(total data=%d, total batch=%d)' % (len(self.sources), self.num_batch))
-
-    def get_next(self):
-
-        s = self.sources[self.index:self.index+self.batch_size]
-        t = self.targets[self.index:self.index+self.batch_size]
-
-        if self.index + self.batch_size <= len(self.sources):
-            self.index += self.batch_size
-        else:
-            self.index = 0
-
-        return np.asarray(s).astype(np.int32), np.asarray(t).astype(np.int32)
+# class ComTransTest(ComTransTrain):
+#
+#     def __init__(self, batch_size=32, name='test'):
+#
+#         self.batch_size = batch_size
+#         self.index = 0
+#
+#         # load train corpus
+#         self.sources, self.targets = self._load_corpus(mode='test')
+#
+#         # calc total batch count
+#         self.num_batch = len(self.sources) // batch_size
+#
+#         # print info
+#         tf.sg_info('Test data loaded.(total data=%d, total batch=%d)' % (len(self.sources), self.num_batch))
+#
+#     def get_next(self):
+#
+#         s = self.sources[self.index:self.index+self.batch_size]
+#         t = self.targets[self.index:self.index+self.batch_size]
+#
+#         if self.index + self.batch_size <= len(self.sources):
+#             self.index += self.batch_size
+#         else:
+#             self.index = 0
+#
+#         return np.asarray(s).astype(np.int32), np.asarray(t).astype(np.int32)

@@ -14,22 +14,19 @@ tf.sg_verbosity(10)
 # hyper parameters
 #
 
-batch_size = 8     # batch size
-latent_dim = 200   # hidden layer dimension
-num_blocks = 2     # dilated blocks
-num_batch = 2      # total generation time
+batch_size = 10
+latent_dim = 300   # hidden layer dimension
+num_blocks = 3     # dilated blocks
+max_len = 150      # max sequence length
+voca_size = 123    # total characters in the vocabulary
 
 #
 # inputs
 #
 
-# ComTrans parallel corpus input tensor ( with QueueRunner )
-data = ComTransTest(batch_size=batch_size)
-voca_size = data.voca_size
-
 # place holders
-x = tf.placeholder(dtype=tf.sg_intx, shape=(batch_size, data.max_len))
-y_src = tf.placeholder(dtype=tf.sg_intx, shape=(batch_size, data.max_len))
+x = tf.placeholder(dtype=tf.sg_intx, shape=(batch_size, max_len))
+y_src = tf.placeholder(dtype=tf.sg_intx, shape=(batch_size, max_len))
 
 # make embedding matrix for source and target
 emb_x = tf.sg_emb(name='emb_x', voca_size=voca_size, dim=latent_dim)
@@ -96,10 +93,29 @@ for i in range(num_blocks):
            .sg_res_block(size=3, rate=16, causal=True))
 
 # final fully convolution layer for softmax
-dec = dec.sg_conv1d(size=1, dim=data.voca_size)
+dec = dec.sg_conv1d(size=1, dim=voca_size)
 
 # greedy search
 label = dec.sg_argmax()
+
+
+#
+# translate
+#
+
+# smaple french sentences for source language
+sources = [
+    "Et pareil phénomène ne devrait pas occuper nos débats ?",
+    "Mais nous devons les aider sur la question de la formation .",
+    "Les videurs de sociétés sont punis .",
+    "Après cette période , ces échantillons ont été analysés et les résultats illustrent bien la quantité de dioxine émise au cours des mois écoulés .",
+    "Merci beaucoup , Madame la Commissaire .",
+    "Le Zimbabwe a beaucoup à gagner de l ' accord de partenariat et a un urgent besoin d ' aide et d ' allégement de la dette .",
+    "Le gouvernement travailliste de Grande-Bretagne a également des raisons d ' être fier de ses performances .",
+    "La plupart d' entre nous n' a pas l' intention de se vanter des 3 millions d' euros .",
+    "Si le Conseil avait travaillé aussi vite que ne l' a fait M. Brok , nous serions effectivement bien plus avancés .",
+    "Le deuxième thème important concerne la question de la gestion des contingents tarifaires ."
+]
 
 # run graph for translating
 with tf.Session() as sess:
@@ -110,29 +126,24 @@ with tf.Session() as sess:
     saver = tf.train.Saver()
     saver.restore(sess, tf.train.latest_checkpoint('asset/train/ckpt'))
 
-    for n in range(num_batch):
+    # initialize character sequence
+    pred_prev = np.zeros((batch_size, max_len)).astype(np.int32)
+    pred = np.zeros((batch_size, max_len)).astype(np.int32)
 
-        # get test data
-        src, gt = data.get_next()
+    # generate output sequence
+    for i in range(max_len):
+        # predict character
+        out = sess.run(label, {x: sources, y_src: pred_prev})
+        # update character sequence
+        if i < max_len - 1:
+            pred_prev[:, i + 1] = out[:, i]
+        pred[:, i] = out[:, i]
 
-        # initialize character sequence
-        pred_prev = np.zeros((batch_size, data.max_len)).astype(np.int32)
-        pred = np.zeros((batch_size, data.max_len)).astype(np.int32)
-
-        # generate output sequence
-        for i in range(data.max_len):
-            # predict character
-            out = sess.run(label, {x: src, y_src: pred_prev})
-            # update character sequence
-            if i < data.max_len - 1:
-                pred_prev[:, i + 1] = out[:, i]
-            pred[:, i] = out[:, i]
-
-        # print result
-        print 'iteration #%d --------------' % n
-        print 'input : --------------'
-        data.print_index(src)
-        print 'ground-truth : --------------'
-        data.print_index(gt)
-        print 'output : --------------'
-        data.print_index(pred)
+    # print result
+    print 'iteration #%d --------------' % n
+    print 'input : --------------'
+    data.print_index(sources)
+    print 'ground-truth : --------------'
+    data.print_index(gt)
+    print 'output : --------------'
+    data.print_index(pred)

@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 import sugartensor as tf
-from data import ComTransTrain
+from data import ComTrans
 
 
 __author__ = 'buriburisuri@gmail.com'
@@ -23,7 +23,7 @@ num_blocks = 3     # dilated blocks
 #
 
 # ComTrans parallel corpus input tensor ( with QueueRunner )
-data = ComTransTrain(batch_size=batch_size)
+data = ComTrans(batch_size=batch_size)
 
 # source, target sentence
 x, y = data.source, data.target
