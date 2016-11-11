@@ -37,7 +37,7 @@ Download which package (l=list; x=cancel)?
 
 1. I've replaced the Sub Batch Normal with [Layer Normalization](https://arxiv.org/abs/1607.06450) for convenience.
 1. No bags of characters applied for simplicity.
-1. Latent dimension is 300 because comtrans corpus in NLTK is small. ( 892 in the paper )
+1. Latent dimension is 400 because comtrans corpus in NLTK is small. ( 892 in the paper )
 1. Generation code not optimized.
 
 ## Training the network
