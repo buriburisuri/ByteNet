@@ -64,11 +64,11 @@ to translate sample French sentences to English. The result will be printed on t
 
 The result looks messy but promising. 
 Though Comtrans corpus in NLTK is very small(in my experiment only 17,163 pairs used), 
-the model have learned English word structure and syntax by character level.  
-I think that the translation accuracy wil be better if we use a reasonably big corpus. 
+the model have learned English words structures and syntax by character level.  
+I think that the translation accuracy will be better if we use big corpus. 
   
 
-| French (sources) | English translated by ByteNet | English translated by Google translator |
+| French (sources) | English (translated by ByteNet) | English (translated by Google translator) |
 | :------------- | :------------- | :------------- |
 | Et pareil phénomène ne devrait pas occuper nos débats ? | And there is no need to play in this is in this way , " ) | And such a phenomenon should not occupy our debates? |
 | Mais nous devons les aider sur la question de la formation . | However , we must reach an agreement with the points of our of the Union . | But we need help on the issue of training. |
