@@ -6,7 +6,7 @@ and they achieved fast training and state-of-the-art performance on character-le
 
 The architecture ( from the paper )
 <p align="center">
-  <img src="https://raw.githubusercontent.com/buriburisuri/ByteNet/master/png/architecture.png" width="800"/>
+  <img src="https://raw.githubusercontent.com/buriburisuri/ByteNet/master/png/architecture.png" width="1024"/>
 </p>
 
 ## Dependencies
