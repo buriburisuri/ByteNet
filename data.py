@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from __future__ import print_function
 import sugartensor as tf
 import numpy as np
 
@@ -97,4 +98,4 @@ class ComTrans(object):
                     str_ += unichr(self.index2byte[ch])
                 elif ch == 1:  # <EOS>
                     break
-            print '[%d]' % i + str_
+            print('[%d]' % i + str_)
