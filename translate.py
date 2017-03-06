@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from __future__ import print_function
 import sugartensor as tf
 import numpy as np
 from data import ComTrans
@@ -146,7 +147,7 @@ with tf.Session() as sess:
             pred[:, i] = out[:, i]
 
 # print result
-print '\nsources : --------------'
+print('\nsources : --------------')
 data.print_index(sources)
-print '\ntargets : --------------'
+print('\ntargets : --------------')
 data.print_index(pred)
