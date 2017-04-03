@@ -9,11 +9,15 @@ The architecture ( from the paper )
   <img src="https://raw.githubusercontent.com/buriburisuri/ByteNet/master/png/architecture.png" width="800"/>
 </p>
 
-## Dependencies
+## Version
 
-1. tensorflow >= rc0.11
-1. [sugartensor](https://github.com/buriburisuri/sugartensor) >= 0.0.1.7
-1. [nltk](http://www.nltk.org/install.html) >= 3.0
+Current Version : __***0.0.0.2***__
+
+## Dependencies ( VERSION MUST BE MATCHED EXACTLY! )
+
+1. [tensorflow](https://www.tensorflow.org/versions/r0.11/get_started/os_setup.html#pip-installation) == 1.0.0
+1. [sugartensor](https://github.com/buriburisuri/sugartensor) == 1.0.0.2
+1. [nltk](http://www.nltk.org/install.html) == 3.2.2
 
 ## Datasets
 
@@ -85,7 +89,7 @@ I think that the translation accuracy will be better if we use big corpus.
 ## pre-trained models
 
 You can translate French sentences to English sentences with the pre-trained model on the Comtrans corpus in NLTK. 
-Extract [the following zip file](https://drive.google.com/file/d/0B3ILZKxzcrUydklJTXgyRzRwUzQ/view?usp=sharing) in 'asset/train/ckpt'.
+Extract [the following zip file](https://drive.google.com/file/d/0B3ILZKxzcrUydklJTXgyRzRwUzQ/view?usp=sharing) in 'asset/train'.
 And try another sample French sentences in the 'translate.py' file.  
  
 ## Other resources
