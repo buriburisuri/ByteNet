@@ -1,9 +1,8 @@
-# -*- coding: utf-8 -*-
 import sugartensor as tf
 import numpy as np
 
 
-__author__ = 'buriburisuri@gmail.com'
+__author__ = 'namju.kim@kakaobrain.com'
 
 
 class ComTrans(object):
