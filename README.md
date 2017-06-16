@@ -11,13 +11,14 @@ The architecture ( from the paper )
 
 ## Version
 
-Current Version : __***0.0.0.2***__
+Current Version : __***0.0.0.3***__
 
 ## Dependencies ( VERSION MUST BE MATCHED EXACTLY! )
 
 1. [tensorflow](https://www.tensorflow.org/versions/r0.11/get_started/os_setup.html#pip-installation) == 1.0.0
 1. [sugartensor](https://github.com/buriburisuri/sugartensor) == 1.0.0.2
 1. [nltk](http://www.nltk.org/install.html) == 3.2.2
+1. [msgpack](http://msgpack.org)
 
 ## Datasets
 

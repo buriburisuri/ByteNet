@@ -1,6 +1,5 @@
-import sugartensor as tf
 from model import *
-from data import ComTrans
+from data import WmtFrEn, ComTrans
 
 
 __author__ = 'namju.kim@kakaobrain.com'
@@ -9,26 +8,36 @@ __author__ = 'namju.kim@kakaobrain.com'
 # set log level to debug
 tf.sg_verbosity(10)
 
-
-#
-# hyper parameters
-#
-
-batch_size = 16    # batch size
+# command line argument
+tf.sg_arg_def(bs=(16, "Batch size. The default is 16."))
+tf.sg_arg_def(lr=(0.0001, "Learning rate. The default is 0.0001."))
+tf.sg_arg_def(ep=(20, "Maximum epoch. The default is 20."))
+tf.sg_arg_def(li=(60, "Logging interval. The default is 60."))
+tf.sg_arg_def(corpus=('wmt', 'Corpus to use. The default is "wmt".'))
 
 #
 # inputs
 #
 
-# ComTrans parallel corpus input tensor ( with QueueRunner )
-data = ComTrans(batch_size=batch_size)
+if tf.sg_arg().corpus == 'wmt':
 
-# source, target sentence
-x, y = data.source, data.target
+    # WMT en_de parallel corpus for train
+    train = WmtFrEn(batch_size=tf.sg_arg().bs)
+    # vocabulary size
+    voca_size = train.voca_size
+
+    # source, target sentence
+    x, y = train.fr, train.en
+elif tf.sg_arg().corpus == 'comtrans':
+
+    # ComTrans parallel corpus input tensor
+    train = ComTrans(batch_size=tf.sg_arg().bs)
+
+    # source, target sentence
+    x, y = train.source, train.target
+
 # shift target for training source
-y_in = tf.concat([tf.zeros((batch_size, 1), tf.sg_intx), y[:, :-1]], axis=1)
-# vocabulary size
-voca_size = data.voca_size
+y_in = tf.concat([tf.zeros((tf.sg_arg().bs, 1), tf.sg_intx), y[:, :-1]], axis=1)
 
 # make embedding matrix for source and target
 emb_x = tf.sg_emb(name='emb_x', voca_size=voca_size, dim=latent_dim)
@@ -48,8 +57,12 @@ enc = enc.sg_concat(target=z_y)
 dec = decode(enc, voca_size)
 
 # cross entropy loss with logit and mask
-loss = dec.sg_ce(target=y, mask=True)
+loss = dec.sg_ce(target=y, mask=True, name='ce')
 
+#
 # train
-tf.sg_train(loss=loss, log_interval=30, lr=0.0001, ep_size=data.num_batch, max_ep=20)
+#
+tf.sg_train(loss=loss, lr=tf.sg_arg().lr,
+            ep_size=train.num_batch, max_ep=tf.sg_arg().ep,
+            log_interval=tf.sg_arg().li, save_dir='asset/train/%s' % tf.sg_arg().corpus)
 

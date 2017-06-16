@@ -1,8 +1,7 @@
 # -*- coding: utf-8 -*-
-import sugartensor as tf
 import numpy as np
 from model import *
-from data import ComTrans
+from data import WmtFrEn
 
 
 __author__ = 'namju.kim@kakaobrain.com'
@@ -10,6 +9,7 @@ __author__ = 'namju.kim@kakaobrain.com'
 
 # set log level to debug
 tf.sg_verbosity(10)
+
 
 #
 # hyper parameters
@@ -22,7 +22,7 @@ batch_size = 10
 #
 
 # ComTrans parallel corpus input tensor ( with QueueRunner )
-data = ComTrans(batch_size=batch_size)
+data = WmtFrEn()
 
 # place holders
 x = tf.placeholder(dtype=tf.sg_intx, shape=(batch_size, data.max_len))
@@ -56,7 +56,7 @@ label = dec.sg_argmax()
 # translate
 #
 
-# smaple french sentences for source language
+# sample french sentences for source language
 sources = [
     u"Et pareil phénomène ne devrait pas occuper nos débats ?",
     u"Mais nous devons les aider sur la question de la formation .",
@@ -80,25 +80,23 @@ with tf.Session() as sess:
 
     # restore parameters
     saver = tf.train.Saver()
-    saver.restore(sess, tf.train.latest_checkpoint('asset/train'))
+    saver.restore(sess, tf.train.latest_checkpoint('asset/train/wmt'))
 
-    for i in range(3):
+    # initialize character sequence
+    pred_prev = np.zeros((batch_size, data.max_len)).astype(np.int32)
+    pred = np.zeros((batch_size, data.max_len)).astype(np.int32)
 
-        # initialize character sequence
-        pred_prev = np.zeros((batch_size, data.max_len)).astype(np.int32)
-        pred = np.zeros((batch_size, data.max_len)).astype(np.int32)
-
-        # generate output sequence
-        for i in range(data.max_len):
-            # predict character
-            out = sess.run(label, {x: sources, y_in: pred_prev})
-            # update character sequence
-            if i < data.max_len - 1:
-                pred_prev[:, i + 1] = out[:, i]
-            pred[:, i] = out[:, i]
+    # generate output sequence
+    for i in range(data.max_len):
+        # predict character
+        out = sess.run(label, {x: sources, y_in: pred_prev})
+        # update character sequence
+        if i < data.max_len - 1:
+            pred_prev[:, i + 1] = out[:, i]
+        pred[:, i] = out[:, i]
 
 # print result
-print '\nsources : --------------'
+print('\nsources : --------------')
 data.print_index(sources)
-print '\ntargets : --------------'
+print('\ntargets : --------------')
 data.print_index(pred)
