@@ -87,9 +87,10 @@ with tf.Session() as sess:
         refers.append(data.to_str(target))
 
         # print result
-        print('sources [%d]: %s' % (n, data.to_str(source, split=False)))
-        print('predict [%d]: %s' % (n, data.to_str(pred, split=False)))
-        print('g-truth [%d]: %s' % (n, data.to_str(target, split=False)))
+        print('(%d/%d) th processed.' % (n, len(sources)))
+        print('s: %s' % data.to_str(source, split=False))
+        print('t: %s' % data.to_str(target, split=False))
+        print('p: %s' % data.to_str(pred, split=False))
 
     with open('asset/data/wmt_fr_en_res.msgpack', 'wb') as f:
         f.write(msgpack.packb([refers, hypos]))

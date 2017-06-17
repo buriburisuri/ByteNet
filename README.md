@@ -75,16 +75,16 @@ I think that the translation accuracy will be better if we use big corpus.
 
 | French (sources) | English (translated by ByteNet) | English (translated by Google translator) |
 | :------------- | :------------- | :------------- |
-| Et pareil phénomène ne devrait pas occuper nos débats ? | And they applied commitments have been satisfied ? | And such a phenomenon should not occupy our debates? |
-| Mais nous devons les aider sur la question de la formation . | However , we must addruss that climate condition . | But we need help on the issue of training. |
-| Les videurs de sociétés sont punis . | The existing considerations in the coming years ago . | Corporate bouncers are punished. |
-| Après cette période , ces échantillons ont été analysés et les résultats illustrent bien la quantité de dioxine émise au cours des mois écoulés . | According to the relevant continent with the intentions and for all , the points of building situation by the directive butchers . | After this period, the samples were analyzed and the results illustrate the amount of dioxins emitted during the past months. |
-| Merci beaucoup , Madame la Commissaire . | Thank you very much for the Commissioner against this perfect . | Thank you very much, Commissioner. |
-| Le Zimbabwe a beaucoup à gagner de l ' accord de partenariat et a un urgent besoin d ' aide et d ' allégement de la dette . | The AIDR problem is carried out corperation in the waken home after a peaceful future and not have their different parts . | Zimbabwe has much to gain from the Partnership Agreement and urgently needs aid and debt relief. |
-| Le gouvernement travailliste de Grande-Bretagne a également des raisons d ' être fier de ses performances . | The Larning wants to have a former colleague with the United States is indeed all of the population . | The Labour government in Britain also has reason to be proud of its performance. |
-| La plupart d' entre nous n' a pas l' intention de se vanter des 3 millions d' euros . | Most of us here would not wish to boast about EUR 3 million . | Most of us do not have the intention to boast of 3 million euros. |
-| Si le Conseil avait travaillé aussi vite que ne l' a fait M. Brok , nous serions effectivement bien plus avancés . | If the Council had worked as quickly as Mr Brok then have been done and general support . | If the Council had worked as quickly as did the did Mr Brok, we would indeed well advanced. |
-| Le deuxième thème important concerne la question de la gestion des contingents tarifaires . | The second important area is the issue of managing tariff quotas .| The second important issue concerns the question of the management of tariff quotas. |
+| Et pareil phénomène ne devrait pas occuper nos débats ? | and so phenomena should not be about our debates | And such a phenomenon should not occupy our debates? |
+| Mais nous devons les aider sur la question de la formation . | but we must help them in the field of training as well | But we need help on the issue of training. |
+| Les videurs de sociétés sont punis . | societies of the society are punished for their own purposes | Corporate bouncers are punished. |
+| Après cette période , ces échantillons ont été analysés et les résultats illustrent bien la quantité de dioxine émise au cours des mois écoulés . | after this period these studies have been analysed and the results illustrate the daily record in mine during the past few months | After this period, the samples were analyzed and the results illustrate the amount of dioxins emitted during the past months. |
+| Merci beaucoup , Madame la Commissaire . | thank you very much commissioner | Thank you very much, Commissioner. |
+| Le Zimbabwe a beaucoup à gagner de l ' accord de partenariat et a un urgent besoin d ' aide et d ' allégement de la dette . | zimbabwe has a great deal to be done in the partnership agreement and need to be supported and debt relief | Zimbabwe has much to gain from the Partnership Agreement and urgently needs aid and debt relief. |
+| Le gouvernement travailliste de Grande-Bretagne a également des raisons d ' être fier de ses performances . | the labour government in britain is also right to point out that it is proud of its efforts | The Labour government in Britain also has reason to be proud of its performance. |
+| La plupart d' entre nous n' a pas l' intention de se vanter des 3 millions d' euros . | most of us have not intended to spend eur 3 million | Most of us do not have the intention to boast of 3 million euros. |
+| Si le Conseil avait travaillé aussi vite que ne l' a fait M. Brok , nous serions effectivement bien plus avancés . | if the council had worked quite well as mr brok had done we would in fact be much better | If the Council had worked as quickly as did the did Mr Brok, we would indeed well advanced. |
+| Le deuxième thème important concerne la question de la gestion des contingents tarifaires . | the second important issue is the question of the management of tariff quotas| The second important issue concerns the question of the management of tariff quotas. |
 
 
 ## pre-trained models
@@ -107,4 +107,4 @@ And try another sample French sentences in the 'translate.py' file.
 1. [SRGAN tensorflow implementation](https://github.com/buriburisuri/SRGAN)
 
 # Authors
-Namju Kim (buriburisuri@gmail.com) at Jamonglabs Co., Ltd.
+Namju Kim (namju.kim@kakaobrain.com) at KakaoBrain Corp.
