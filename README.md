@@ -89,7 +89,7 @@ I think that the translation accuracy will be better if we use big corpus.
 ## pre-trained models
 
 You can translate French sentences to English sentences with the pre-trained model on the Comtrans corpus in NLTK. 
-Extract [the following zip file](https://drive.google.com/open?id=0B3ILZKxzcrUyeXBVeVZoWlN5XzA) in 'asset/train'.
+Extract [the following zip file](https://drive.google.com/file/d/0B3ILZKxzcrUyeXBVeVZoWlN5XzA/view?usp=sharing&resourcekey=0-XtdX-roA29Z5KtpVPrKChA) in 'asset/train'.
 And try another sample French sentences in the 'translate.py' file.  
  
 ## Other resources
